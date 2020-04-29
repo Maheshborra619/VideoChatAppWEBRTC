@@ -13,12 +13,12 @@ navigator.mediaDevices.getUserMedia({video : true, audio : true})
 
     //use to initialize a peer
     function InitPeer(type){
-let peer = new Peer({initiator:(type == 'init')?true:false, stream : stream,trickle:false})
+let peer = new Peer({initiator: (type == 'init') ? true : false, stream : stream,trickle:false})
    peer.on('stream',function(stream) {
        CreateVideo(stream)
    })
-   peer.on('close',function(stream){
-       document.getElementById('peerVideo').remove();
+   peer.on('close',function(){
+       document.getElementById("peerVideo").remove();
        peer.destroy();
    })
    return peer
@@ -54,7 +54,7 @@ let peer = new Peer({initiator:(type == 'init')?true:false, stream : stream,tric
 
     function CreateVideo(stream){
     let video = document.createElement('video')
-    video.id = "peerVideo"
+    video.id = 'peerVideo'
     video.srcObject = stream
     video.class = 'embed-responsive-item'
     document.querySelector('#peerDiv').appendChild(video)

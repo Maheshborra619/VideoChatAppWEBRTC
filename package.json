@@ -2,7 +2,7 @@
   "name": "video-app",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
     "watch": "npx watchify ./public/main.js -o ./public/bundle.js"
