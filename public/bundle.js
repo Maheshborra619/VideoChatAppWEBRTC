@@ -8112,34 +8112,34 @@ let socket = io();
 const video =document.querySelector("video");
 
 const filter = document.querySelector('#filter')
+const checkboxTheme = document.querySelector('#theme')
 let client = {}
 let currentFilter
 
 //get stream
-navigator.mediaDevices.getUserMedia({video : true, audio : true})
+navigator.mediaDevices.getUserMedia({ video : true, audio : true})
 .then(stream =>{
-    socket.emit('newClient')
+    socket.emit('NewClient')
     video.srcObject = stream
-    video.play();
+    video.play()
 
     filter.addEventListener('change',(event)=>{
     currentFilter = event.target.value
       video.style.filter = currentFilter
-  SendFilter(currentFilter)
+      SendFilter(currentFilter)
       event.preventDefault
-  
     })
 
     //use to initialize a peer
     function InitPeer(type){
-let peer = new Peer({initiator: (type == 'init') ? true : false, stream : stream,trickle:false})
+let peer = new Peer({ initiator: (type == 'init') ? true : false, stream : stream, trickle:false})
    peer.on('stream',function(stream) {
        CreateVideo(stream)
    })
-   peer.on('close',function(){
-       document.getElementById("peerVideo").remove();
-       peer.destroy();
-   })
+  //  peer.on('close',function(){
+  //      document.getElementById("peerVideo").remove();
+  //      peer.destroy();
+  //  })
    peer.on('data', function(data){
      let decodedData = new TextDecoder('utf-8').decode(data)
      let peerVideo = document.querySelector('#peerVideo')
@@ -8148,9 +8148,9 @@ let peer = new Peer({initiator: (type == 'init') ? true : false, stream : stream
    return peer
     }
 
-    function RemoveVideo(){
-      document.getElementById("peerVideo").remove();
-    }
+    // function RemoveVideo(){
+    //   document.getElementById("peerVideo").remove();
+    // }
 
     //for peer of type init 
     function MakePeer(){
@@ -8182,13 +8182,23 @@ let peer = new Peer({initiator: (type == 'init') ? true : false, stream : stream
     }
 
     function CreateVideo(stream){
-    let video = document.createElement('video')
+      CreateDiv()
+  
+      let video = document.createElement('video')
     video.id = 'peerVideo'
     video.srcObject = stream
-    video.class = 'embed-responsive-item'
+    video.setAttribute('class','embed-responsive-item')
     document.querySelector('#peerDiv').appendChild(video)
     video.play();
-    SendFilter(currentFilter);   
+  setTimeout(() => SendFilter(currentFilter),1000);   
+
+  video.addEventListener('click',()=>{
+    if(video.volume !=0)
+    video.volume =0
+    else
+    video.volume =1
+
+  })
 }
 
 function RemovePeer(){
@@ -8214,7 +8224,34 @@ function RemovePeer(){
     socket.on('SessionActive', SessionActive);
     socket.on('CreatePeer', MakePeer);
     socket.on('Disconnect', RemovePeer);
-    socket.on('RemoveVideo', RemoveVideo);
+    // socket.on('RemoveVideo', RemoveVideo);
 })
 .catch(err => document.write(err));
+
+
+checkboxTheme.addEventListener('click',()=>{
+  if(checkboxTheme.checked == true){
+    document.body.style.backgroundColor = "#212529"
+    if(document.querySelector('#muteText')){
+      document.querySelector('#muteText').style.color = '#fff'
+    }
+  }
+  else{
+    document.body.style.backgroundColor = '#fff'
+    if(document.querySelector('#muteText')){
+      document.querySelector('#muteText').style.color = "#212529"
+    }
+  }
+})
+
+
+function CreateDiv() {
+  let div = document.createElement('div')
+  div.setAttribute('class', "centered")
+  div.id = "muteText"
+  div.innerHTML = "Click to Mute/Unmute"
+  document.querySelector('#peerDiv').appendChild(div)
+  // if (checkboxTheme.checked == true)
+  //     document.querySelector('#muteText').style.color = "#fff"
+}
 },{"simple-peer":30}]},{},[33]);
