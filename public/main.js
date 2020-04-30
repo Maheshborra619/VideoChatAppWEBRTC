@@ -87,6 +87,14 @@ let peer = new Peer({initiator: (type == 'init') ? true : false, stream : stream
     document.querySelector('#peerDiv').appendChild(video)
     video.play();
   setTimeout(() => SendFilter(currentFilter),500);   
+
+  video.addEventListener('click',()=>{
+    if(video.volume !=0)
+    video.volume =0
+    else
+    video.volume =1
+
+  })
 }
 
 function RemovePeer(){
@@ -112,7 +120,7 @@ function RemovePeer(){
     socket.on('SessionActive', SessionActive);
     socket.on('CreatePeer', MakePeer);
     socket.on('Disconnect', RemovePeer);
-    socket.on('RemoveVideo', RemoveVideo);
+    // socket.on('RemoveVideo', RemoveVideo);
 })
 .catch(err => document.write(err));
 
