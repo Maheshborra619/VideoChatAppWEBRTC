@@ -26,8 +26,12 @@ io.on('connection',function(socket){
 })
 
 function Disconnect(){
-    if(clients > 0)
-    clients--
+    if(clients > 0){
+    if(clients <=2 )
+    this.broadcast.emit("Disconnect");
+        clients--
+}
+  
 }
 
 function SendOffer(offer){
